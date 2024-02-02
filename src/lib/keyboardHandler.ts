@@ -21,22 +21,30 @@ class KeyboardHandler {
 
   parse(text: string):ParsedSentence {
     const result:ParsedSentence = [];
+    let buffer = '';
     for (let i = 0; i < text.length; i++) {
       const char = text[i];
       if (char === '｛') {
-        let buffer = '';
+        if (buffer.length > 0) {
+          result.push({charSets: this._splitKeys(buffer)});
+          buffer = '';
+        }
+        let _buffer = '';
         while (i < text.length) {
           i++;
           const char = text[i];
           if (char === '｝') {
             break;
           }
-          buffer += char;
+          _buffer += char;
         }
-        result.push({charSets: this._splitKeys(buffer)});
+        result.push({charSets: this._splitKeys(_buffer)});
       } else {
-        result.push({charSets: [char]});
+        buffer += char;
       }
+    }
+    if (buffer.length > 0) {
+      result.push(...this._splitKeys(buffer).map((i)=>({charSets: [i]})));
     }
     return result;
   }
@@ -55,7 +63,9 @@ class KeyboardHandler {
           buffer += char;
         }
         tmpChars.push(buffer);
+        continue;
       }
+      tmpChars.push(char);
     }
     return tmpChars
   }
