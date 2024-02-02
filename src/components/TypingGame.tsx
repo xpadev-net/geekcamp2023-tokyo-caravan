@@ -1,4 +1,9 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
+
+// import { useRouter } from 'next/router';
+import styles from "./TypingGame.module.css";
 
 const TypingGame: React.FC = () => {
   // ゲームの状態を管理するためのstate変数
@@ -8,6 +13,8 @@ const TypingGame: React.FC = () => {
   const [missCount, setMissCount] = useState<number>(0); // ミスカウント
   const [time, setTime] = useState<number>(30); // 残り時間
   const [gameOver, setGameOver] = useState<boolean>(false); // ゲームオーバーのフラグ
+  const [inputBgColor, setInputBgColor] = useState("white"); // 初期値は "white"
+  // const router = useRouter();
 
   // コンポーネントがマウントされた時に新しい単語を生成
   useEffect(() => {
@@ -16,16 +23,17 @@ const TypingGame: React.FC = () => {
 
   // 時間のカウントダウンとゲームオーバーのロジックを管理
   useEffect(() => {
-    let timer: NodeJS.Timeout;
+    let timer: number;
 
     // タイマーをセットして時間を減らす
     if (time > 0 && !gameOver && missCount < 5) {
-      timer = setTimeout(() => {
+      timer = window.setTimeout(() => {
         setTime(time - 1);
       }, 1000);
     } else if ((time === 0 || missCount >= 5) && !gameOver) {
       // ゲームオーバー条件のチェック
       setGameOver(true);
+      // router.push("/gameover");
       alert("Game Over");
     }
 
@@ -59,13 +67,13 @@ const TypingGame: React.FC = () => {
     if (!gameOver && missCount < 5) {
       if (userInput === word) {
         // 入力が正しい場合
-        document.getElementById("text")!.style.backgroundColor = "white";
+        setInputBgColor("white"); // 背景色を白に設定
         setScore(score + 10);
         setTime(Math.min(time + 2, 30));
         generateNewWord();
       } else if (userInput.length >= word.length) {
         // 入力が間違っている場合
-        document.getElementById("text")!.style.backgroundColor = "pink";
+        setInputBgColor("pink"); // 背景色をピンクに設定
         setInput("");
         setScore(Math.max(score - 1, 0));
         setMissCount(missCount + 1);
@@ -83,38 +91,32 @@ const TypingGame: React.FC = () => {
 
   // UIのレンダリング
   return (
-    <div className="game m-3">
-      {/*<h1 className="m-4 text-4xl" style={{ fontFamily: 'monospace', color: 'white', backgroundColor: 'black', padding: '10px' }}>
-          Vim Master Typing Challenge
-      </h1> */}
-      <div className="text-base dark:text-white">Time : {time}</div>{" "}
-      {/*残り時間の表示*/}
-      <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
+    <div className={styles.game}>
+      <div className={styles.time}>Time : {time}</div>
+      <div className={styles.progressBarBackground}>
         <div
-          className="bg-blue-600 h-2.5 rounded-full dark:bg-blue-500"
+          className={styles.progressBar}
           style={{ width: `${time * 3.33}%` }}
-        ></div>{" "}
-        {/* 残り時間のビジュアル表現 */}
+        ></div>
       </div>
-      <p className="m-1">Score : {score}</p> {/* スコアの表示 */}
-      <p className="m-1">MissCount : {missCount}</p> {/* ミスカウントの表示 */}
-      <h2 className="m-10 text-3xl">Word : {word}</h2> {/* 現在の単語の表示 */}
+      <p className={styles.score}>Score : {score}</p>
+      <p className={styles.missCount}>MissCount : {missCount}</p>
+      <h2 className={styles.word}>Word : {word}</h2>
       <input
         id="text"
-        className="m-1"
+        className={styles.inputField}
         type="text"
         value={input}
         onChange={handleInputChange}
-      />{" "}
-      {/* 入力フィールド */}
+        style={{ backgroundColor: inputBgColor }}
+      />
       <input
         id="reset"
-        className="m-1"
+        className={styles.resetButton}
         type="button"
         value="Reset"
         onClick={reset}
-      />{" "}
-      {/* リセットボタン */}
+      />
     </div>
   );
 };
