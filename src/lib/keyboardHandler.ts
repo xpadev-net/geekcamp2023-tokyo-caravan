@@ -1,44 +1,109 @@
+import {ArrayEqual} from "@/lib/array";
+
+type ParsedSentence = ParsedExceptedKey[];
+
+type ParsedExceptedKey = {
+  charSets: string[];
+}
+
 class KeyboardHandler {
-  private text:string[];
-  private offset: number;
+  public sentences:ParsedSentence[];
+  public offset = 0;
+
   constructor(text: string[]) {
-    this.text = text;
+    this.sentences = text.map((t)=>this.parse(t));
     this.offset = 0;
   }
   setText(text:string[]) {
-    this.text = text;
+    this.sentences = text.map((t)=>this.parse(t));
     this.offset = 0;
   }
-  handleKeyDown(event:KeyboardEvent) {
-    const key = event.key;
-    if (key.length > 1) {
-      return {
-        success: false,
-        completed: false,
-        ignore: true,
+
+  parse(text: string):ParsedSentence {
+    const result:ParsedSentence = [];
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      if (char === '｛') {
+        let buffer = '';
+        while (i < text.length) {
+          i++;
+          const char = text[i];
+          if (char === '｝') {
+            break;
+          }
+          buffer += char;
+        }
+        result.push({charSets: this._splitKeys(buffer)});
+      } else {
+        result.push({charSets: [char]});
       }
     }
-    for (const text of this.text) {
-      if (text.startsWith(key)) {
-        if (text.length === 1) {
+    return result;
+  }
+  private _splitKeys(text: string) {
+    const tmpChars:string[] = [];
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      if (char === '「'){
+        let buffer = '';
+        while (i < text.length) {
+          i++;
+          const char = text[i];
+          if (char === '」') {
+            break;
+          }
+          buffer += char;
+        }
+        tmpChars.push(buffer);
+      }
+    }
+    return tmpChars
+  }
+
+  parseKeyDown(event:KeyboardEvent) {
+    const result = [event.key];
+    if (event.shiftKey) {
+      result.push('Shift');
+    }
+    if (event.ctrlKey) {
+      result.push('Control');
+    }
+    if (event.altKey) {
+      result.push('Alt');
+    }
+    if (event.metaKey) {
+      result.push('Meta');
+    }
+    return result;
+  }
+
+  handleKeyDown(event:KeyboardEvent) {
+    const parsedKey = this.parseKeyDown(event);
+
+    for (const sentence of this.sentences) {
+      const exceptedKey = sentence[this.offset];
+      if (ArrayEqual(exceptedKey.charSets, parsedKey)) {
+        if (this.offset === sentence.length -1) {
+          this.offset = 0;
           return {
-            success: true,
-            completed: false,
-            ignore: true,
+            completed: true,
+            valid: true,
           }
         }
-        this.text = this.text.filter((t) => t.startsWith(key)).map((t)=>t.slice(1));
+        this.sentences = this.sentences.filter((s) => {
+          const exceptedKey = s[this.offset];
+          return ArrayEqual(exceptedKey.charSets, parsedKey);
+        })
+        this.offset++;
         return {
-          success: true,
           completed: false,
-          ignore: false,
-        };
+          valid: true,
+        }
       }
     }
     return {
-      success: false,
       completed: false,
-      ignore: false,
+      valid: false,
     }
   }
 }
