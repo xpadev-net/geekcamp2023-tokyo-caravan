@@ -1,5 +1,5 @@
 Question,Answer
-fileAを開く,vimfile A
+fileAを開く,vim fileA
 vimを閉じる,:q
 fileAという名前をつけて保存する,:w
 保存せずに終了する,:q!
@@ -30,6 +30,5 @@ fileAという名前をつけて保存する,:w
 上方向に検索する,? <文字列>
 次の検索結果に移動する,n
 前の検索結果に移動する,N
-置換する,:%s/<置換元文字列>/<置換後文字列>/g
 チュートリアル,vimtutor
 ヘルプ,:help
