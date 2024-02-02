@@ -1,36 +1,39 @@
 class KeyboardHandler {
-  private text:string;
+  private text:string[];
   private offset: number;
-  constructor(text: string="") {
+  constructor(text: string[]) {
     this.text = text;
     this.offset = 0;
   }
-  setText(text:string) {
+  setText(text:string[]) {
     this.text = text;
     this.offset = 0;
   }
   handleKeyDown(event:KeyboardEvent) {
-    if (event.key.length > 1) {
+    const key = event.key;
+    if (key.length > 1) {
       return {
         success: false,
         completed: false,
         ignore: true,
       }
     }
-    if (event.key === this.text.slice(this.offset, this.offset + 1)) {
-      this.offset++;
-      if (this.offset === this.text.length) {
+    for (const text of this.text) {
+      if (text.startsWith(key)) {
+        if (text.length === 1) {
+          return {
+            success: true,
+            completed: false,
+            ignore: true,
+          }
+        }
+        this.text = this.text.filter((t) => t.startsWith(key)).map((t)=>t.slice(1));
         return {
           success: true,
-          completed: true,
+          completed: false,
           ignore: false,
         };
       }
-      return {
-        success: true,
-        completed: false,
-        ignore: false,
-      };
     }
     return {
       success: false,
