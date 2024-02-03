@@ -66,7 +66,7 @@ const TypingGame: React.FC = () => {
     const { Question, Answer } = getRandomItem();
     // //todo: データから選択するように変更
     setLabel(Question);
-    handler.setText([Answer, "test"]);
+    handler.setText([Answer]);
     setParsedData(handler.getParsedContents());
   };
 
