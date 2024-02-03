@@ -46,3 +46,19 @@
 .resetButton {
   margin: 4px;
 }
+
+.keys {
+  display: flex;
+  flex-direction: row;
+  white-space: pre;
+}
+
+.typed {
+  color: gray;
+}
+
+.excepted {
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
