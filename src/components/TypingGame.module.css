@@ -36,6 +36,10 @@
 
 .inputField {
   margin: 4px;
+  display: none;
+}
+.miss {
+  background: pink;
 }
 
 .resetButton {
