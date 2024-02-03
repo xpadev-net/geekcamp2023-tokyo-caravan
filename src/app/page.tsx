@@ -39,7 +39,7 @@ const Home: React.FC = () => {
     backgroundColor: "black",
     boxShadow: "0 0 10px #000000",
     position: "absolute",
-    top: 100,
+    top: 0,
     left: 0,
     width: "100%", // 重複削除
   };
