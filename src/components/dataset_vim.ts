@@ -105,7 +105,7 @@ const Dataset_vim = [
   },
   {
     Question: "リドゥ(やり直す)",
-    Answer: "「Control」r",
+    Answer: "｛「Control」r｝",
   },
   {
     Question: '"hello world"という文字列を下方向に検索する',
