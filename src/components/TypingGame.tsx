@@ -124,7 +124,7 @@ const TypingGame: React.FC = () => {
         input:
         <div className={styles.keys}>
           <div className={styles.typed}>{parsedData?.typed}</div>
-          <span> </span>
+          {(parsedData?.typed.length ?? 0) > 0 && <span> </span>}
           <div className={`${isMiss && styles.miss} ${styles.excepted}`}>
             {parsedData?.remaining.map((line, index) => {
               return <p key={index}>{line}</p>;
