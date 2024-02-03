@@ -26,7 +26,7 @@ const Home: React.FC = () => {
           </button>
         </>
       ) : (
-        <TypingGame />
+        <TypingGame onGameOver={(score) => alert(`game over ${score}`)} />
       )}
     </div>
   );
