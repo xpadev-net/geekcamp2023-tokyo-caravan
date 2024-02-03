@@ -8,11 +8,11 @@ const Dataset_vim = [
     Answer: ":q",
   },
   {
-    Question: "fileAという名前をつけて保存する",
+    Question: "ファイルを保存する",
     Answer: ":w",
   },
   {
-    Question: "保存せずに終了する",
+    Question: "変更を破棄してvimを閉じる",
     Answer: ":q!",
   },
   {
@@ -124,7 +124,7 @@ const Dataset_vim = [
     Answer: "N",
   },
   {
-    Question: "チュートリアル",
+    Question: "チュートリアルを開く(コマンド)",
     Answer: "vimtutor",
   },
   {
