@@ -133,6 +133,16 @@ const Dataset_vim = [
   },
 ];
 
+let usedIndex: number[] = [];
+
 export const getRandomItem = () => {
-  return Dataset_vim[Math.floor((Dataset_vim.length - 1) * Math.random())];
+  if (usedIndex.length === Dataset_vim.length) {
+    usedIndex = [];
+  }
+  let index = Math.floor((Dataset_vim.length - 1) * Math.random());
+  while (usedIndex.includes(index)) {
+    index = Math.floor((Dataset_vim.length - 1) * Math.random());
+  }
+  usedIndex.push(index);
+  return Dataset_vim[index];
 };
