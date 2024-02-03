@@ -54,7 +54,7 @@ const TypingGame: React.FC = () => {
     setMissCount(0);
     setTime(30);
     setGameOver(false);
-    document.getElementById("text")!.style.backgroundColor = "white";
+    setInputBgColor("white");
     generateNewWord();
   };
 
