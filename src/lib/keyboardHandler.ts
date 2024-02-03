@@ -71,10 +71,11 @@ class KeyboardHandler {
   }
 
   parseKeyDown(event:KeyboardEvent) {
-    const result = [event.key];
-    if (event.shiftKey) {
-      result.push('Shift');
+    console.log(event.key);
+    if (event.key.match(/Control|Alt|Meta|Shift/)){
+      return [];
     }
+    const result = [event.key];
     if (event.ctrlKey) {
       result.push('Control');
     }
@@ -89,6 +90,13 @@ class KeyboardHandler {
 
   handleKeyDown(event:KeyboardEvent) {
     const parsedKey = this.parseKeyDown(event);
+    if (parsedKey.length === 0){
+      return {
+        completed: false,
+        valid: false,
+        ignore: true,
+      }
+    }
 
     for (const sentence of this.sentences) {
       const exceptedKey = sentence[this.offset];
@@ -99,6 +107,7 @@ class KeyboardHandler {
           return {
             completed: true,
             valid: true,
+            ignore: false,
           }
         }
         this.sentences = this.sentences.filter((s) => {
@@ -109,12 +118,14 @@ class KeyboardHandler {
         return {
           completed: false,
           valid: true,
+          ignore: false,
         }
       }
     }
     return {
       completed: false,
       valid: false,
+      ignore: false,
     }
   }
 

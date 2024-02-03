@@ -89,7 +89,7 @@ const Dataset_vim = [
   },
   {
     Question: "ノーマルモードに切り替える",
-    Answer: "「Esc」",
+    Answer: "「Escape」",
   },
   {
     Question: "カーソル位置の文字を削除する",
