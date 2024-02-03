@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 
 import { KeyboardHandler } from "@/lib/keyboardHandler";
 
+import { getRandomItem } from "./dataset_vim";
 // import { useRouter } from 'next/router';
 import styles from "./TypingGame.module.css";
 
@@ -14,6 +15,7 @@ const TypingGame: React.FC = () => {
   const [time, setTime] = useState<number>(30); // 残り時間
   const [gameOver, setGameOver] = useState<boolean>(false); // ゲームオーバーのフラグ
   const [isMiss, setIsMiss] = useState<boolean>(false); // ミスしたかどうかのフラグ
+  const [label, setLabel] = useState<string>(""); // 入力のラベル
   const [parsedData, setParsedData] = useState<
     | {
         typed: string;
@@ -61,8 +63,10 @@ const TypingGame: React.FC = () => {
 
   // 新しい単語を生成して初期化する関数
   const generateNewWord = (handler: KeyboardHandler) => {
-    //todo: データから選択するように変更
-    handler.setText(["tatituteto", "tachitsuteto"]);
+    const { Question, Answer } = getRandomItem();
+    // //todo: データから選択するように変更
+    setLabel(Question);
+    handler.setText([Answer]);
     setParsedData(handler.getParsedContents());
   };
 
@@ -113,9 +117,9 @@ const TypingGame: React.FC = () => {
       </div>
       <p className={styles.score}>Score : {score}</p>
       <p className={styles.missCount}>MissCount : {missCount}</p>
-      <h2 className={styles.word}>Word : </h2>
+      <h2>{label}</h2>
       <div>
-        <div>{parsedData?.typed}</div>
+        input :<div>{parsedData?.typed}</div>
         <div className={`${isMiss && styles.miss}`}>
           {parsedData?.remaining.map((line, index) => {
             return <p key={index}>{line}</p>;
