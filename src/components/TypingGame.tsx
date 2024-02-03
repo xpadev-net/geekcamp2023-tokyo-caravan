@@ -98,11 +98,6 @@ const TypingGame: React.FC = () => {
     }
     if (!result.valid) {
       setScore((pv) => Math.max(pv - 1, 0));
-      if (missCount > 4) {
-        setGameOver(true);
-        alert("Game Over");
-      }
-      setMissCount((pv) => pv + 1);
       setTime(Math.max(time - 3, 0));
     }
   };
@@ -110,22 +105,29 @@ const TypingGame: React.FC = () => {
   // UIのレンダリング
   return (
     <div className={styles.game}>
-      <div className={styles.time}>Time : {time}</div>
-      <div className={styles.progressBarBackground}>
-        <div
-          className={styles.progressBar}
-          style={{ width: `${time * 3.33}%` }}
-        ></div>
+      <div className={styles.header}>
+        <div className={styles.scores}>
+          <p className={styles.score}>Score : {score}</p>
+          <p className={styles.missCount}>MissCount : {missCount}</p>
+        </div>
+        <div>
+          <div className={styles.time}>Time : {time}</div>
+          <div className={styles.progressBarBackground}>
+            <div
+              className={styles.progressBar}
+              style={{ width: `${time * 3.33}%` }}
+            ></div>
+          </div>
+        </div>
       </div>
-      <p className={styles.score}>Score : {score}</p>
-      <p className={styles.missCount}>MissCount : {missCount}</p>
-      <h2>{label}</h2>
+      <h2 className={styles.label}>{label}</h2>
       <div>
-        input:
         <div className={styles.keys}>
           <div className={styles.typed}>{parsedData?.typed}</div>
           {(parsedData?.typed.length ?? 0) > 0 && <span> </span>}
-          <div className={`${isMiss && styles.miss} ${styles.excepted}`}>
+          <div
+            className={`${isMiss && styles.miss} ${styles.excepted} ${time > 10 && styles.hidden}`}
+          >
             {parsedData?.remaining.map((line, index) => {
               return <p key={index}>{line}</p>;
             })}
