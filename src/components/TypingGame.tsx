@@ -66,7 +66,7 @@ const TypingGame: React.FC = () => {
     const { Question, Answer } = getRandomItem();
     // //todo: データから選択するように変更
     setLabel(Question);
-    handler.setText([Answer]);
+    handler.setText([Answer, "test"]);
     setParsedData(handler.getParsedContents());
   };
 
@@ -121,11 +121,15 @@ const TypingGame: React.FC = () => {
       <p className={styles.missCount}>MissCount : {missCount}</p>
       <h2>{label}</h2>
       <div>
-        input :<div>{parsedData?.typed}</div>
-        <div className={`${isMiss && styles.miss}`}>
-          {parsedData?.remaining.map((line, index) => {
-            return <p key={index}>{line}</p>;
-          })}
+        input:
+        <div className={styles.keys}>
+          <div className={styles.typed}>{parsedData?.typed}</div>
+          <span> </span>
+          <div className={`${isMiss && styles.miss} ${styles.excepted}`}>
+            {parsedData?.remaining.map((line, index) => {
+              return <p key={index}>{line}</p>;
+            })}
+          </div>
         </div>
       </div>
       <input
