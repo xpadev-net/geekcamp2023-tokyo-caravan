@@ -1,6 +1,6 @@
 "use client";
 
-import React, { KeyboardEventHandler, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { KeyboardHandler } from "@/lib/keyboardHandler";
 
@@ -9,12 +9,11 @@ import styles from "./TypingGame.module.css";
 
 const TypingGame: React.FC = () => {
   // ゲームの状態を管理するためのstate変数
-  const [input, setInput] = useState<string>(""); // ユーザー入力
   const [score, setScore] = useState<number>(0); // スコア
   const [missCount, setMissCount] = useState<number>(0); // ミスカウント
   const [time, setTime] = useState<number>(30); // 残り時間
   const [gameOver, setGameOver] = useState<boolean>(false); // ゲームオーバーのフラグ
-  const [inputBgColor, setInputBgColor] = useState("white"); // 初期値は "white"
+  const [isMiss, setIsMiss] = useState<boolean>(false); // ミスしたかどうかのフラグ
   const [parsedData, setParsedData] = useState<
     | {
         typed: string;
@@ -53,32 +52,38 @@ const TypingGame: React.FC = () => {
     return () => clearTimeout(timer);
   }, [time, gameOver, missCount]);
 
+  useEffect(() => {
+    document.addEventListener("keydown", handleInputChange);
+    return () => {
+      document.removeEventListener("keydown", handleInputChange);
+    };
+  }, [missCount]);
+
   // 新しい単語を生成して初期化する関数
   const generateNewWord = (handler: KeyboardHandler) => {
     //todo: データから選択するように変更
     handler.setText(["tatituteto", "tachitsuteto"]);
     setParsedData(handler.getParsedContents());
-    setInput("");
   };
 
   // ゲームをリセットする関数
   const reset = () => {
-    setInput("");
     setScore(0);
     setMissCount(0);
     setTime(30);
     setGameOver(false);
-    setInputBgColor("white");
+    setIsMiss(false);
     const handler = keyboardHandlerRef.current ?? new KeyboardHandler([]);
     generateNewWord(handler);
   };
 
   // 入力フィールドの変更をハンドルする関数
-  const handleInputChange: KeyboardEventHandler<HTMLDivElement> = (e) => {
+  const handleInputChange = (e: KeyboardEvent) => {
     const handler = keyboardHandlerRef.current;
     if (!handler) return;
-    const result = handler.handleKeyDown(e.nativeEvent);
+    const result = handler.handleKeyDown(e);
     setParsedData(handler.getParsedContents());
+    setIsMiss(!result.valid);
     if (result.completed) {
       generateNewWord(handler);
       setScore((pv) => pv + 10);
@@ -86,7 +91,6 @@ const TypingGame: React.FC = () => {
       return;
     }
     if (!result.valid) {
-      setInputBgColor("pink");
       setScore((pv) => Math.max(pv - 1, 0));
       if (missCount > 4) {
         setGameOver(true);
@@ -99,7 +103,7 @@ const TypingGame: React.FC = () => {
 
   // UIのレンダリング
   return (
-    <div className={styles.game} onKeyDown={handleInputChange}>
+    <div className={styles.game}>
       <div className={styles.time}>Time : {time}</div>
       <div className={styles.progressBarBackground}>
         <div
@@ -112,20 +116,12 @@ const TypingGame: React.FC = () => {
       <h2 className={styles.word}>Word : </h2>
       <div>
         <div>{parsedData?.typed}</div>
-        <div>
+        <div className={`${isMiss && styles.miss}`}>
           {parsedData?.remaining.map((line, index) => {
             return <p key={index}>{line}</p>;
           })}
         </div>
       </div>
-      <input
-        id="text"
-        className={styles.inputField}
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        style={{ backgroundColor: inputBgColor }}
-      />
       <input
         id="reset"
         className={styles.resetButton}
