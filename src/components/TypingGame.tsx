@@ -9,13 +9,19 @@ import styles from "./TypingGame.module.css";
 
 const TypingGame: React.FC = () => {
   // ゲームの状態を管理するためのstate変数
-  const [word, setWord] = useState<string>(""); // 表示する単語
   const [input, setInput] = useState<string>(""); // ユーザー入力
   const [score, setScore] = useState<number>(0); // スコア
   const [missCount, setMissCount] = useState<number>(0); // ミスカウント
   const [time, setTime] = useState<number>(30); // 残り時間
   const [gameOver, setGameOver] = useState<boolean>(false); // ゲームオーバーのフラグ
   const [inputBgColor, setInputBgColor] = useState("white"); // 初期値は "white"
+  const [parsedData, setParsedData] = useState<
+    | {
+        typed: string;
+        remaining: string[];
+      }
+    | undefined
+  >();
 
   const keyboardHandlerRef = React.useRef<KeyboardHandler>();
   // const router = useRouter();
@@ -50,8 +56,8 @@ const TypingGame: React.FC = () => {
   // 新しい単語を生成して初期化する関数
   const generateNewWord = (handler: KeyboardHandler) => {
     //todo: データから選択するように変更
-    handler.setText(["test"]);
-    setWord("");
+    handler.setText(["tatituteto", "tachitsuteto"]);
+    setParsedData(handler.getParsedContents());
     setInput("");
   };
 
@@ -72,6 +78,7 @@ const TypingGame: React.FC = () => {
     const handler = keyboardHandlerRef.current;
     if (!handler) return;
     const result = handler.handleKeyDown(e.nativeEvent);
+    setParsedData(handler.getParsedContents());
     if (result.completed) {
       generateNewWord(handler);
       setScore((pv) => pv + 10);
@@ -102,7 +109,15 @@ const TypingGame: React.FC = () => {
       </div>
       <p className={styles.score}>Score : {score}</p>
       <p className={styles.missCount}>MissCount : {missCount}</p>
-      <h2 className={styles.word}>Word : {word}</h2>
+      <h2 className={styles.word}>Word : </h2>
+      <div>
+        <div>{parsedData?.typed}</div>
+        <div>
+          {parsedData?.remaining.map((line, index) => {
+            return <p key={index}>{line}</p>;
+          })}
+        </div>
+      </div>
       <input
         id="text"
         className={styles.inputField}
