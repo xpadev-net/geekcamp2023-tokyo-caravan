@@ -10,9 +10,9 @@ const Home: React.FC = () => {
 
   return (
     <div className={styles.wrapper}>
-      <h1 className={styles.title}>Vim Master Typing Challenge</h1>
       {!gameStarted ? (
         <>
+          <h1 className={styles.title}>Vim Master Typing Challenge</h1>
           <img
             src="/images/CLI.png"
             alt="Description"
@@ -26,7 +26,7 @@ const Home: React.FC = () => {
           </button>
         </>
       ) : (
-        <TypingGame />
+        <TypingGame onGameOver={(score) => alert(`game over ${score}`)} />
       )}
     </div>
   );
