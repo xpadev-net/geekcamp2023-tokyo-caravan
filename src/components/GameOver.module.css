@@ -1,0 +1,27 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  width: 80vw;
+}
+.title {
+  font-size: 80px;
+}
+.score {
+  font-size: 40px;
+}
+.buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 32px;
+}
+.button {
+  padding: 16px 32px;
+  font-size: 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
