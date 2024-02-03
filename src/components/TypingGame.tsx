@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { KeyboardEventHandler, useEffect, useState } from "react";
+
+import { KeyboardHandler } from "@/lib/keyboardHandler";
 
 // import { useRouter } from 'next/router';
 import styles from "./TypingGame.module.css";
@@ -14,11 +16,15 @@ const TypingGame: React.FC = () => {
   const [time, setTime] = useState<number>(30); // 残り時間
   const [gameOver, setGameOver] = useState<boolean>(false); // ゲームオーバーのフラグ
   const [inputBgColor, setInputBgColor] = useState("white"); // 初期値は "white"
+
+  const keyboardHandlerRef = React.useRef<KeyboardHandler>();
   // const router = useRouter();
 
   // コンポーネントがマウントされた時に新しい単語を生成
   useEffect(() => {
-    generateNewWord();
+    const handler = new KeyboardHandler([]);
+    generateNewWord(handler);
+    keyboardHandlerRef.current = handler;
   }, []);
 
   // 時間のカウントダウンとゲームオーバーのロジックを管理
@@ -42,7 +48,9 @@ const TypingGame: React.FC = () => {
   }, [time, gameOver, missCount]);
 
   // 新しい単語を生成して初期化する関数
-  const generateNewWord = () => {
+  const generateNewWord = (handler: KeyboardHandler) => {
+    //todo: データから選択するように変更
+    handler.setText(["test"]);
     setWord("");
     setInput("");
   };
@@ -55,43 +63,36 @@ const TypingGame: React.FC = () => {
     setTime(30);
     setGameOver(false);
     setInputBgColor("white");
-    generateNewWord();
+    const handler = keyboardHandlerRef.current ?? new KeyboardHandler([]);
+    generateNewWord(handler);
   };
 
   // 入力フィールドの変更をハンドルする関数
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const userInput = e.target.value;
-    setInput(userInput);
-
-    // 正しい入力と誤った入力のロジック
-    if (!gameOver && missCount < 5) {
-      if (userInput === word) {
-        // 入力が正しい場合
-        setInputBgColor("white"); // 背景色を白に設定
-        setScore(score + 10);
-        setTime(Math.min(time + 2, 30));
-        generateNewWord();
-      } else if (userInput.length >= word.length) {
-        // 入力が間違っている場合
-        setInputBgColor("pink"); // 背景色をピンクに設定
-        setInput("");
-        setScore(Math.max(score - 1, 0));
-        setMissCount(missCount + 1);
-
-        if (missCount + 1 >= 5) {
-          // ミスカウントでゲームオーバー
-          setGameOver(true);
-          alert("Game Over");
-        }
-
-        setTime(Math.max(time - 3, 0));
+  const handleInputChange: KeyboardEventHandler<HTMLDivElement> = (e) => {
+    const handler = keyboardHandlerRef.current;
+    if (!handler) return;
+    const result = handler.handleKeyDown(e.nativeEvent);
+    if (result.completed) {
+      generateNewWord(handler);
+      setScore((pv) => pv + 10);
+      setTime((pv) => Math.min(pv + 2, 30));
+      return;
+    }
+    if (!result.valid) {
+      setInputBgColor("pink");
+      setScore((pv) => Math.max(pv - 1, 0));
+      if (missCount > 4) {
+        setGameOver(true);
+        alert("Game Over");
       }
+      setMissCount((pv) => pv + 1);
+      setTime(Math.max(time - 3, 0));
     }
   };
 
   // UIのレンダリング
   return (
-    <div className={styles.game}>
+    <div className={styles.game} onKeyDown={handleInputChange}>
       <div className={styles.time}>Time : {time}</div>
       <div className={styles.progressBarBackground}>
         <div
@@ -107,7 +108,7 @@ const TypingGame: React.FC = () => {
         className={styles.inputField}
         type="text"
         value={input}
-        onChange={handleInputChange}
+        onChange={(e) => setInput(e.target.value)}
         style={{ backgroundColor: inputBgColor }}
       />
       <input

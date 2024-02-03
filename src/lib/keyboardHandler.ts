@@ -92,6 +92,7 @@ class KeyboardHandler {
 
     for (const sentence of this.sentences) {
       const exceptedKey = sentence[this.offset];
+      console.log(exceptedKey.charSets,parsedKey,ArrayEqual(exceptedKey.charSets, parsedKey));
       if (ArrayEqual(exceptedKey.charSets, parsedKey)) {
         if (this.offset === sentence.length -1) {
           this.offset = 0;
