@@ -23,15 +23,18 @@
 
 .score {
   margin: 4px;
+  color: white;
 }
 
 .missCount {
   margin: 4px;
+  color: white;
 }
 
 .word {
   margin: 40px;
   font-size: 1.875rem; /* 3xl */
+  color: white;
 }
 
 .inputField {
