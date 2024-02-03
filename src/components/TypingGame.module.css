@@ -1,5 +1,6 @@
 .game {
   margin: 12px;
+  min-width: 80vw;
 }
 
 .time {
