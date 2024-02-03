@@ -1,0 +1,20 @@
+Question,Answer
+新しいGitリポジトリを初期化する,git init
+リモートリポジトリを複製する,git clone <リポジトリURL>
+リモートリポジトリのオリジンを追加する,git remote add origin <リポジトリURL>
+変更をステージングエリアに追加する,git add <ファイル>
+ステージングエリアの変更をコミットする,git commit -m "<メッセージ>"
+変更されたファイルのステータスを表示する,git status
+コミット履歴を表示する,git log
+ブランチの一覧を表示する,git branch
+指定したブランチに切り替える,git checkout <ブランチ名>
+指定したブランチを現在のブランチにマージする,git merge <ブランチ名>
+リモートリポジトリから変更を取得してマージする,git pull
+ローカルの変更をリモートリポジトリにプッシュする,git push
+リモートリポジトリの一覧とURLを表示する,git remote -v
+リモートリポジトリから変更を取得するが、マージは行わない,git fetch
+変更内容を表示する,git diff
+指定したファイルのステージングを取り消す,git reset <ファイル>
+ファイルを削除してステージングエリアに追加する,git rm <ファイル>
+変更を一時的に隠す, git stash
+一時的に隠した変更を復元する, git stash apply
