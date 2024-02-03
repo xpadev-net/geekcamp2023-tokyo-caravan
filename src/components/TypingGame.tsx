@@ -86,6 +86,7 @@ const TypingGame: React.FC = () => {
     const handler = keyboardHandlerRef.current;
     if (!handler) return;
     const result = handler.handleKeyDown(e);
+    if (result.ignore) return;
     setParsedData(handler.getParsedContents());
     setIsMiss(!result.valid);
     if (result.completed) {
