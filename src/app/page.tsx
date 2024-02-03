@@ -2,15 +2,18 @@
 
 import React, { useState } from "react";
 
+import { GameOver } from "@/components/GameOver";
+
 import TypingGame from "../components/TypingGame";
 import styles from "./page.module.css";
 
 const Home: React.FC = () => {
-  const [gameStarted, setGameStarted] = useState<boolean>(false);
+  const [status, setStatus] = useState<"top" | "game" | "end">("top");
+  const [score, setScore] = useState(0);
 
   return (
     <div className={styles.wrapper}>
-      {!gameStarted ? (
+      {status === "top" && (
         <>
           <h1 className={styles.title}>Vim Master Typing Challenge</h1>
           <img
@@ -18,15 +21,25 @@ const Home: React.FC = () => {
             alt="Description"
             style={{ maxWidth: "60%", maxHeight: "60vh" }}
           />
-          <button
-            onClick={() => setGameStarted(true)}
-            className={styles.button}
-          >
+          <button onClick={() => setStatus("game")} className={styles.button}>
             ゲーム開始
           </button>
         </>
-      ) : (
-        <TypingGame onGameOver={(score) => alert(`game over ${score}`)} />
+      )}
+      {status === "game" && (
+        <TypingGame
+          onGameOver={(score) => {
+            setScore(score);
+            setStatus("end");
+          }}
+        />
+      )}
+      {status === "end" && (
+        <GameOver
+          reset={() => setStatus("top")}
+          retry={() => setStatus("game")}
+          score={score}
+        />
       )}
     </div>
   );
