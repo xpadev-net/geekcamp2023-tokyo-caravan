@@ -1,0 +1,43 @@
+.game {
+  margin: 12px;
+}
+
+.time {
+  font-size: 1rem;
+  color: white;
+}
+
+.progressBarBackground {
+  width: 100%;
+  background-color: #e2e8f0; /* light gray */
+  border-radius: 4px;
+  height: 10px;
+  margin-bottom: 16px;
+}
+
+.progressBar {
+  height: 10px;
+  border-radius: 4px;
+  background-color: #4299e1; /* blue */
+}
+
+.score {
+  margin: 4px;
+}
+
+.missCount {
+  margin: 4px;
+}
+
+.word {
+  margin: 40px;
+  font-size: 1.875rem; /* 3xl */
+}
+
+.inputField {
+  margin: 4px;
+}
+
+.resetButton {
+  margin: 4px;
+}
