@@ -1,3 +1,5 @@
+"use client";
+
 import React, { CSSProperties, useState } from "react";
 
 import TypingGame from "../components/TypingGame";
