@@ -71,8 +71,7 @@ class KeyboardHandler {
   }
 
   parseKeyDown(event:KeyboardEvent) {
-    console.log(event.key);
-    if (event.key.match(/Control|Alt|Meta|Shift/)){
+    if (event.key.match(/^(?:Control|Alt|Meta|Shift)$/)){
       return [];
     }
     const result = [event.key];
@@ -100,7 +99,6 @@ class KeyboardHandler {
 
     for (const sentence of this.sentences) {
       const exceptedKey = sentence[this.offset];
-      console.log(exceptedKey.charSets,parsedKey,ArrayEqual(exceptedKey.charSets, parsedKey));
       if (ArrayEqual(exceptedKey.charSets, parsedKey)) {
         if (this.offset === sentence.length -1) {
           this.offset = 0;
