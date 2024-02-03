@@ -117,6 +117,19 @@ class KeyboardHandler {
       valid: false,
     }
   }
+
+  getParsedContents(){
+    if (this.sentences.length === 0) {
+      return undefined;
+    }
+    const typed = this.sentences[0].slice(0,this.offset).map((s)=>s.charSets.join('+')).join("->");
+    const remaining = this.sentences.map((s)=>s.slice(this.offset).map((s)=>s.charSets.join('+')).join("->"));
+    return {
+      typed,
+      remaining,
+    }
+  }
+
 }
 
 export {KeyboardHandler};
