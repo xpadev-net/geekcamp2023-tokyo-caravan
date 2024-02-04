@@ -49,7 +49,7 @@ const Dataset_vim = [
   },
   {
     Question: "行頭に移動する",
-    Answer: "O",
+    Answer: "0",
   },
   {
     Question: "行末に移動する",
